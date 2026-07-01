@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>할머니 화투점</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Nanum+Myeongjo:wght@400;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- 홈 화면 -->
+  <div id="screen-home" class="screen active">
+    <div class="stars"></div>
+    <div class="home-content">
+      <div class="bigung-wrap">
+        <div class="bigung-card">
+          <div class="rain-line r1"></div>
+          <div class="rain-line r2"></div>
+          <div class="rain-line r3"></div>
+          <div class="rain-line r4"></div>
+          <div class="rain-line r5"></div>
+          <div class="umbrella">☂</div>
+          <div class="man-body"></div>
+          <div class="frog">🐸</div>
+        </div>
+        <div class="bigung-glow"></div>
+      </div>
+
+      <h1 class="app-title">할머니 화투점</h1>
+      <p class="app-subtitle">오리지날 짝맞추기 화투점</p>
+      <p class="app-tagline">48장 담요에 깔고 짝 3쌍 맞추면 운세가 나와요</p>
+
+      <div class="usage-box" id="usageBox">
+        <span id="usageText">오늘 운세 1회 남았어요</span>
+      </div>
+
+      <button class="btn-main" id="btnStart">
+        <span class="btn-icon">🎴</span>
+        오늘의 운세 보기
+      </button>
+
+      <button class="btn-ad" id="btnAd" style="display:none">
+        📺 광고 보고 +2회 더 보기
+      </button>
+
+      <p class="ad-used-msg" id="adUsedMsg" style="display:none">오늘은 광고 이용을 다 사용했어요</p>
+    </div>
+  </div>
+
+  <!-- 질문 선택 화면 -->
+  <div id="screen-question" class="screen">
+    <div class="question-wrap">
+      <p class="question-lead">어떤 걸 봐줄까?</p>
+      <h2 class="question-title">할머니한테 뭐가 궁금해?</h2>
+      <div class="question-grid">
+        <button class="btn-q" data-q="today">🌅<br>오늘 이야기</button>
+        <button class="btn-q" data-q="love">❤️<br>연애·연인</button>
+        <button class="btn-q" data-q="money">💰<br>돈·재물</button>
+        <button class="btn-q" data-q="work">💼<br>일·직업</button>
+        <button class="btn-q" data-q="relation">🤝<br>인간관계</button>
+        <button class="btn-q" data-q="worry">🤔<br>고민 해결</button>
+      </div>
+      <button class="btn-q-skip" id="btnQSkip">그냥 봐줘 →</button>
+      <button class="btn-back btn-q-back" id="btnQBack">＜</button>
+    </div>
+  </div>
+
+  <!-- 담요 화면 (셔플 + 카드 선택 통합) -->
+  <div id="screen-cards" class="screen">
+    <!-- 전체 화면 담요 -->
+    <div class="damyo-full" id="damyoArea">
+      <!-- 카드 뭉치 (초기) -->
+      <div class="deck-wrap" id="deckWrap">
+        <div class="deck-stack" id="deckStack">
+          <div class="deck-card dk5"></div>
+          <div class="deck-card dk4"></div>
+          <div class="deck-card dk3"></div>
+          <div class="deck-card dk2"></div>
+          <div class="deck-card dk1"></div>
+        </div>
+        <p class="deck-hint" id="deckHint">자, 섞어봐</p>
+      </div>
+      <!-- 흩어진 카드들 (JS로 동적 생성) -->
+    </div>
+
+    <!-- HUD 오버레이 -->
+    <div class="hud" id="hud" style="display:none">
+      <button class="btn-back hud-back" id="btnBackHome">＜</button>
+      <p class="hud-msg" id="hudMsg">한 장씩 뒤집어봐, 짝을 찾아</p>
+      <span class="hud-count" id="pickCount">0쌍</span>
+    </div>
+
+    <!-- 운세 보기 버튼 -->
+    <div class="fortune-btn-wrap" id="fortuneBtnWrap" style="display:none">
+      <button class="btn-main btn-fortune" id="btnFortune">🔮 운세 보기</button>
+    </div>
+  </div>
+
+  <!-- 로딩 화면 -->
+  <div id="screen-loading" class="screen">
+    <div class="loading-wrap">
+      <div class="loading-cards-row">
+        <div class="loading-card lc1">🎴</div>
+        <div class="loading-card lc2">🎴</div>
+        <div class="loading-card lc3">🎴</div>
+      </div>
+      <p class="loading-msg">할머니가 패를 읽고 계세요...</p>
+      <div class="dots"><span>·</span><span>·</span><span>·</span></div>
+    </div>
+  </div>
+
+  <!-- 결과 화면 -->
+  <div id="screen-result" class="screen">
+    <div class="result-header">
+      <button class="btn-back" id="btnBackCards">＜</button>
+      <h2 class="result-title" id="resultTitle">오늘의 화투 운세</h2>
+    </div>
+
+    <div class="result-drawn-cards" id="resultDrawnCards">
+      <!-- 선택된 카드 3장 표시 -->
+    </div>
+
+    <div class="fortune-scroll">
+      <div class="fortune-body" id="fortuneBody">
+        <!-- AI 운세 텍스트 -->
+      </div>
+    </div>
+
+    <div class="result-footer">
+      <button class="btn-secondary" id="btnGoHome">처음으로</button>
+      <button class="btn-main btn-retry" id="btnRetry">다시 뽑기</button>
+    </div>
+  </div>
+
+  <script src="cards.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
