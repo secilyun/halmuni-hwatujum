@@ -32,15 +32,19 @@ html, body {
    홈 화면
 ══════════════════════════════════════ */
 #screen-home {
-  background: url('bg-home.jpg.png') center top / cover no-repeat;
-  justify-content: space-between;
+  background: url('bg-home.jpg.png') top center / 100% auto no-repeat;
+  background-color: #1a3010;
+  justify-content: flex-end;
   align-items: center;
+  position: relative;
 }
 
 .home-title-area {
-  padding: 52px 24px 0;
+  position: absolute;
+  top: 0;
+  left: 0; right: 0;
+  padding: 48px 24px 0;
   text-align: center;
-  width: 100%;
 }
 .home-deco {
   font-size: 13px;
@@ -50,16 +54,16 @@ html, body {
   opacity: 0.9;
 }
 .app-title {
-  font-size: 36px;
+  font-size: 30px;
   font-weight: 800;
   color: #6a1010;
   letter-spacing: 3px;
-  text-shadow: 0 2px 8px rgba(255,220,180,0.6), 0 0 20px rgba(200,100,50,0.2);
-  margin-bottom: 6px;
+  text-shadow: 0 2px 8px rgba(255,220,180,0.6);
+  margin-bottom: 4px;
   line-height: 1.1;
 }
 .app-subtitle {
-  font-size: 13px;
+  font-size: 12px;
   color: #5a2a10;
   letter-spacing: 2px;
   font-weight: 700;
@@ -68,11 +72,14 @@ html, body {
 
 .home-panel {
   width: 100%;
-  padding: 16px 22px 38px;
+  padding: 20px 22px 36px;
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 10px;
+  background: linear-gradient(to top, rgba(10,20,5,0.85) 0%, rgba(10,20,5,0.5) 70%, transparent 100%);
+  position: relative;
+  z-index: 1;
 }
 .panel-lead {
   font-size: 13px;
@@ -158,7 +165,8 @@ html, body {
    섞기 화면
 ══════════════════════════════════════ */
 #screen-shuffle {
-  background: url('bg-shuffle.jpg.png') center top / cover no-repeat;
+  background: url('bg-shuffle.jpg.png') top center / 100% auto no-repeat;
+  background-color: #1a3010;
   justify-content: space-between;
   align-items: center;
 }
@@ -284,7 +292,8 @@ html, body {
 .damyo-full {
   position: fixed;
   inset: 0;
-  background: url('bg-cards.jpg.png') center top / cover no-repeat;
+  background: url('bg-cards.jpg.png') top center / 100% auto no-repeat;
+  background-color: #1a3010;
 }
 .damyo-full::after {
   content: '';
@@ -525,7 +534,8 @@ html, body {
    로딩 화면
 ══════════════════════════════════════ */
 #screen-loading {
-  background: url('bg-shuffle.jpg.png') center top / cover no-repeat;
+  background: url('bg-shuffle.jpg.png') top center / 100% auto no-repeat;
+  background-color: #1a3010;
   justify-content: center;
   align-items: center;
 }
