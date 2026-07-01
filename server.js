@@ -145,5 +145,5 @@ ${cardLines}
   }
 });
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => console.log(`할머니 화투점 서버 :${PORT}`));
