@@ -844,6 +844,27 @@ html, body {
 .ad-used-msg { font-size: 12px; color: var(--text-dim); text-align: center; }
 
 /* ══════════════════════════════════════
+   데스크탑 — 배경 높이 기준으로
+══════════════════════════════════════ */
+@media (min-width: 600px) {
+  #screen-home {
+    background-size: auto 100%;
+    background-position: center top;
+  }
+  #screen-shuffle, #screen-loading {
+    background-size: auto 100%;
+    background-position: center top;
+  }
+  .damyo-full {
+    background-size: auto 100%;
+    background-position: center top;
+  }
+  .home-panel {
+    max-width: 460px;
+  }
+}
+
+/* ══════════════════════════════════════
    토스트 & 추임새
 ══════════════════════════════════════ */
 .toast {
