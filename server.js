@@ -1,5 +1,6 @@
 const express = require('express');
 const { GoogleGenerativeAI } = require('@google/generative-ai');
+const { Pool } = require('pg');
 require('dotenv').config();
 
 const app = express();
@@ -7,6 +8,50 @@ app.use(express.json());
 app.use(express.static('public'));
 
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+
+const pool = new Pool({
+  connectionString: process.env.DATABASE_URL,
+  ssl: { rejectUnauthorized: false }
+});
+
+(async () => {
+  try {
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS messages (
+        id SERIAL PRIMARY KEY,
+        content VARCHAR(80) NOT NULL,
+        created_at TIMESTAMP DEFAULT NOW()
+      )
+    `);
+    console.log('메시지 테이블 준비 완료');
+  } catch (err) {
+    console.error('DB 초기화 오류:', err.message);
+  }
+})();
+
+app.post('/api/message', async (req, res) => {
+  const { content } = req.body;
+  if (!content || typeof content !== 'string') return res.status(400).json({ error: '내용이 없어요' });
+  const trimmed = content.trim().slice(0, 80);
+  if (!trimmed) return res.status(400).json({ error: '내용이 없어요' });
+  try {
+    await pool.query('INSERT INTO messages (content) VALUES ($1)', [trimmed]);
+    res.json({ ok: true });
+  } catch (err) {
+    console.error('메시지 저장 오류:', err.message);
+    res.status(500).json({ error: '저장 실패' });
+  }
+});
+
+app.get('/api/messages', async (req, res) => {
+  try {
+    const result = await pool.query('SELECT content, created_at FROM messages ORDER BY id DESC LIMIT 30');
+    res.json({ messages: result.rows });
+  } catch (err) {
+    console.error('메시지 조회 오류:', err.message);
+    res.status(500).json({ error: '불러오기 실패' });
+  }
+});
 
 const HWATU_48 = [
   // 1월

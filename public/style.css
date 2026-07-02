@@ -844,6 +844,91 @@ html, body {
 .ad-used-msg { font-size: 12px; color: var(--text-dim); text-align: center; }
 
 /* ══════════════════════════════════════
+   할머니 메시지 섹션
+══════════════════════════════════════ */
+.letter-section {
+  max-width: 400px;
+  margin: 24px auto 0;
+  padding-bottom: 24px;
+}
+.letter-divider {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+.letter-divider-icon { font-size: 18px; }
+.letter-prompt {
+  font-size: 14px;
+  color: var(--gold);
+  text-align: center;
+  margin-bottom: 14px;
+  line-height: 1.7;
+  font-style: italic;
+  letter-spacing: 0.3px;
+  opacity: 0.9;
+}
+.letter-input-wrap {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+.letter-input {
+  flex: 1;
+  background: rgba(200,168,75,0.07);
+  border: 1px solid rgba(200,168,75,0.25);
+  border-radius: 10px;
+  padding: 11px 14px;
+  font-family: 'Nanum Myeongjo', serif;
+  font-size: 13px;
+  color: var(--text);
+  outline: none;
+}
+.letter-input::placeholder { color: var(--text-dim); opacity: 0.6; }
+.letter-input:focus { border-color: rgba(200,168,75,0.5); }
+.btn-letter-send {
+  background: rgba(200,168,75,0.12);
+  border: 1px solid rgba(200,168,75,0.4);
+  border-radius: 10px;
+  padding: 11px 16px;
+  font-family: 'Nanum Myeongjo', serif;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--gold);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.18s;
+}
+.btn-letter-send:active { background: rgba(200,168,75,0.28); transform: scale(0.96); }
+.letter-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.letter-item {
+  background: rgba(200,168,75,0.05);
+  border: 1px solid rgba(200,168,75,0.13);
+  border-radius: 10px;
+  padding: 10px 14px;
+  font-size: 13px;
+  color: var(--text);
+  line-height: 1.6;
+}
+.letter-time {
+  font-size: 10px;
+  color: var(--text-dim);
+  opacity: 0.5;
+  margin-top: 3px;
+}
+.letter-empty {
+  text-align: center;
+  font-size: 12px;
+  color: var(--text-dim);
+  opacity: 0.5;
+  padding: 12px 0;
+}
+
+/* ══════════════════════════════════════
    데스크탑 — 배경 높이 기준으로
 ══════════════════════════════════════ */
 @media (min-width: 600px) {

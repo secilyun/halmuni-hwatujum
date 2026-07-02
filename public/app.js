@@ -345,6 +345,7 @@ async function getFortune(questionType) {
     renderResult(completedPairs, data.fortune, questionType);
     showScreen('screen-result');
     updateMoreQButtons();
+    loadMessages();
   } catch(err) {
     showToast(err.message || '오류가 생겼어요. 다시 시도해주세요.');
     showScreen('screen-cards');
@@ -370,6 +371,7 @@ function getMoreFortune(questionType) {
       renderResult(completedPairs, data.fortune, questionType);
       showScreen('screen-result');
       updateMoreQButtons();
+      loadMessages();
     })
     .catch(err => {
       showToast(err.message || '오류가 생겼어요.');
@@ -537,6 +539,11 @@ function init() {
   });
 
   // 결과: 뒤로/처음으로/다시뽑기
+  document.getElementById('btnLetterSend').addEventListener('click', sendMessage);
+  document.getElementById('letterInput').addEventListener('keydown', e => {
+    if (e.key === 'Enter') sendMessage();
+  });
+
   document.getElementById('btnBackCards').addEventListener('click', () => {
     showScreen('screen-cards');
   });
@@ -551,6 +558,61 @@ function init() {
     document.getElementById('deckHint').textContent = '자, 섞어봐';
     document.getElementById('deckStack').style.animation = '';
   });
+}
+
+// ── 할머니 메시지 ──
+function timeAgo(dateStr) {
+  const diff = Math.floor((Date.now() - new Date(dateStr)) / 1000);
+  if (diff < 60) return '방금';
+  if (diff < 3600) return `${Math.floor(diff/60)}분 전`;
+  if (diff < 86400) return `${Math.floor(diff/3600)}시간 전`;
+  return `${Math.floor(diff/86400)}일 전`;
+}
+
+async function loadMessages() {
+  try {
+    const res = await fetch('/api/messages');
+    const data = await res.json();
+    const list = document.getElementById('letterList');
+    if (!list) return;
+    if (!data.messages || data.messages.length === 0) {
+      list.innerHTML = '<p class="letter-empty">아직 아무도 말을 안 남겼네~ 첫 번째로 써봐!</p>';
+      return;
+    }
+    list.innerHTML = data.messages.map(m => `
+      <div class="letter-item">
+        <div>${escapeHtml(m.content)}</div>
+        <div class="letter-time">${timeAgo(m.created_at)}</div>
+      </div>
+    `).join('');
+  } catch(e) {}
+}
+
+function escapeHtml(str) {
+  return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+async function sendMessage() {
+  const input = document.getElementById('letterInput');
+  const content = input.value.trim();
+  if (!content) return;
+  const btn = document.getElementById('btnLetterSend');
+  btn.disabled = true;
+  btn.textContent = '전달 중...';
+  try {
+    await fetch('/api/message', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ content })
+    });
+    input.value = '';
+    await loadMessages();
+  } catch(e) {
+    showToast('전달에 실패했어요');
+  } finally {
+    btn.disabled = false;
+    btn.textContent = '전하기';
+  }
 }
 
 document.addEventListener('DOMContentLoaded', init);
