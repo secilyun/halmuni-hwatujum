@@ -233,7 +233,7 @@ function scatterCards() {
       <div class="card-inner">
         <div class="card-back-face"><span class="card-hanja-back">花</span></div>
         <div class="card-front-face card-type-${card.type}">
-          ${CARD_SVGS[card.svgIdx]}
+          <img src="card-${String(card.id).padStart(2,'0')}.png" style="width:100%;height:100%;object-fit:cover;display:block;">
           ${gwangBadge}
           <div class="card-selected-mark">✓</div>
         </div>
@@ -422,7 +422,7 @@ function renderResult(pairs, fortuneText, qType) {
     el.style.background = main.bg;
     el.style.setProperty('--accent', main.accent);
     el.innerHTML = `
-      <div class="result-card-svg">${CARD_SVGS[main.svgIdx]}</div>
+      <div class="result-card-svg"><img src="card-${String(main.id).padStart(2,'0')}.png" style="width:100%;height:100%;object-fit:cover;display:block;border-radius:7px;"></div>
       <div class="result-card-overlay">
         <span class="result-pair-badge">짝!</span>
         ${hasGwang ? '<span class="result-gwang-badge">光</span>' : ''}
