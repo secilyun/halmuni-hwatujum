@@ -163,6 +163,7 @@ function renderHome() {
     btnAd.style.display = 'none';
     adUsedMsg.style.display = 'block';
   }
+  loadHomeMessages();
 }
 
 // ── 카테고리 바텀시트 ──
@@ -543,6 +544,15 @@ function init() {
   document.getElementById('letterInput').addEventListener('keydown', e => {
     if (e.key === 'Enter') sendMessage();
   });
+  document.getElementById('letterSection').querySelector('.letter-divider-icon').addEventListener('click', () => {
+    adminTapCount++;
+    if (adminTapCount >= 5) {
+      adminTapCount = 0;
+      adminMode = !adminMode;
+      showToast(adminMode ? '관리자 모드 켜짐' : '관리자 모드 꺼짐');
+      loadMessages();
+    }
+  });
 
   document.getElementById('btnBackCards').addEventListener('click', () => {
     showScreen('screen-cards');
@@ -561,6 +571,10 @@ function init() {
 }
 
 // ── 할머니 메시지 ──
+const STORE_REVIEW_URL = ''; // 앱인토스 등록 후 리뷰 URL 여기에 넣기
+let adminMode = false;
+let adminTapCount = 0;
+
 function timeAgo(dateStr) {
   const diff = Math.floor((Date.now() - new Date(dateStr)) / 1000);
   if (diff < 60) return '방금';
@@ -580,11 +594,34 @@ async function loadMessages() {
       return;
     }
     list.innerHTML = data.messages.map(m => `
-      <div class="letter-item">
+      <div class="letter-item ${adminMode ? 'admin-mode' : ''}">
         <div>${escapeHtml(m.content)}</div>
         <div class="letter-time">${timeAgo(m.created_at)}</div>
+        <button class="btn-delete-msg" onclick="deleteMessage(${m.id})">🗑️</button>
       </div>
     `).join('');
+  } catch(e) {}
+}
+
+async function deleteMessage(id) {
+  const key = prompt('관리자 키를 입력하세요');
+  if (!key) return;
+  try {
+    await fetch(`/api/message/${id}?key=${encodeURIComponent(key)}`, { method: 'DELETE' });
+    loadMessages();
+  } catch(e) { showToast('삭제 실패'); }
+}
+
+async function loadHomeMessages() {
+  try {
+    const res = await fetch('/api/messages');
+    const data = await res.json();
+    const wrap = document.getElementById('homeMessages');
+    if (!wrap || !data.messages || data.messages.length === 0) return;
+    const recent = data.messages.slice(0, 3);
+    wrap.innerHTML = recent.map(m =>
+      `<p class="home-msg-item">💬 ${escapeHtml(m.content)}</p>`
+    ).join('');
   } catch(e) {}
 }
 
@@ -607,6 +644,11 @@ async function sendMessage() {
     });
     input.value = '';
     await loadMessages();
+    const rating = document.getElementById('letterRating');
+    if (rating) {
+      rating.style.display = 'block';
+      if (STORE_REVIEW_URL) document.getElementById('btnRating').href = STORE_REVIEW_URL;
+    }
   } catch(e) {
     showToast('전달에 실패했어요');
   } finally {

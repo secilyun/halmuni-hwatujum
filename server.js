@@ -45,11 +45,22 @@ app.post('/api/message', async (req, res) => {
 
 app.get('/api/messages', async (req, res) => {
   try {
-    const result = await pool.query('SELECT content, created_at FROM messages ORDER BY id DESC LIMIT 30');
+    const result = await pool.query('SELECT id, content, created_at FROM messages ORDER BY id DESC LIMIT 30');
     res.json({ messages: result.rows });
   } catch (err) {
     console.error('메시지 조회 오류:', err.message);
     res.status(500).json({ error: '불러오기 실패' });
+  }
+});
+
+app.delete('/api/message/:id', async (req, res) => {
+  if (req.query.key !== process.env.ADMIN_KEY) return res.status(403).json({ error: '권한 없음' });
+  try {
+    await pool.query('DELETE FROM messages WHERE id = $1', [req.params.id]);
+    res.json({ ok: true });
+  } catch (err) {
+    console.error('메시지 삭제 오류:', err.message);
+    res.status(500).json({ error: '삭제 실패' });
   }
 });
 
