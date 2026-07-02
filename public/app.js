@@ -1,5 +1,7 @@
 'use strict';
 
+const API_BASE = location.hostname === 'localhost' ? '' : 'https://halmuni-hwatujum-production.up.railway.app';
+
 // ── 소리 합성 ──
 let audioCtx = null;
 
@@ -333,7 +335,7 @@ async function getFortune(questionType) {
   showScreen('screen-loading');
 
   try {
-    const res = await fetch('/api/fortune', {
+    const res = await fetch(`${API_BASE}/api/fortune`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ pairs: completedPairs, questionType }),
@@ -360,7 +362,7 @@ function getMoreFortune(questionType) {
   const doFortune = () => {
     currentQuestionType = questionType;
     showScreen('screen-loading');
-    fetch('/api/fortune', {
+    fetch(`${API_BASE}/api/fortune`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ pairs: completedPairs, questionType }),
@@ -585,7 +587,7 @@ function timeAgo(dateStr) {
 
 async function loadMessages() {
   try {
-    const res = await fetch('/api/messages');
+    const res = await fetch(`${API_BASE}/api/messages`);
     const data = await res.json();
     const list = document.getElementById('letterList');
     if (!list) return;
@@ -607,14 +609,14 @@ async function deleteMessage(id) {
   const key = prompt('관리자 키를 입력하세요');
   if (!key) return;
   try {
-    await fetch(`/api/message/${id}?key=${encodeURIComponent(key)}`, { method: 'DELETE' });
+    await fetch(`${API_BASE}/api/message/${id}?key=${encodeURIComponent(key)}`, { method: 'DELETE' });
     loadMessages();
   } catch(e) { showToast('삭제 실패'); }
 }
 
 async function loadHomeMessages() {
   try {
-    const res = await fetch('/api/messages');
+    const res = await fetch(`${API_BASE}/api/messages`);
     const data = await res.json();
     const wrap = document.getElementById('homeMessages');
     if (!wrap || !data.messages || data.messages.length === 0) return;
@@ -637,7 +639,7 @@ async function sendMessage() {
   btn.disabled = true;
   btn.textContent = '전달 중...';
   try {
-    await fetch('/api/message', {
+    await fetch(`${API_BASE}/api/message`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ content })
