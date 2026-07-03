@@ -124,23 +124,16 @@
     <div class="fortune-scroll">
       <div class="fortune-body" id="fortuneBody"></div>
 
-      <!-- 추가 질문 섹션 -->
+      <!-- 점방 가기 -->
       <div class="more-questions" id="moreQuestions">
         <div class="more-q-divider">
           <span>✿</span>
           <span class="more-q-divider-line"></span>
           <span>✿</span>
         </div>
-        <p class="more-q-title">다른 운세도 볼까요?</p>
-        <div class="more-q-grid" id="moreQGrid">
-          <button class="btn-more-q" data-q="today">🌅 오늘 운세</button>
-          <button class="btn-more-q" data-q="love">❤️ 연애운</button>
-          <button class="btn-more-q" data-q="money">💰 재물운</button>
-          <button class="btn-more-q" data-q="work">💼 직업운</button>
-          <button class="btn-more-q" data-q="relation">🤝 인간관계</button>
-          <button class="btn-more-q" data-q="worry">🤔 고민 해결</button>
-        </div>
-        <p class="more-q-note">각 운세는 광고 1회 시청 후 볼 수 있어요</p>
+        <p class="more-q-title">다른 운세가 궁금하다면?</p>
+        <button class="btn-jumbang" id="btnGoJumbang">🏮 할머니 점방 가기</button>
+        <p class="more-q-note">점방에서 9가지 운세를 골라볼 수 있어요</p>
       </div>
 
       <!-- 할머니 메시지 섹션 -->
@@ -166,6 +159,46 @@
     <div class="result-footer">
       <button class="btn-secondary" id="btnGoHome">처음으로</button>
       <button class="btn-main btn-retry" id="btnRetry">다시 뽑기</button>
+    </div>
+  </div>
+
+  <!-- ══════════════════ 할머니 점방 ══════════════════ -->
+  <div id="screen-jumbang" class="screen">
+    <div class="jumbang-header">
+      <button class="btn-back" id="btnBackJumbang">＜</button>
+      <h2 class="jumbang-title">🏮 할머니 점방</h2>
+      <p class="jumbang-sub">우리 강아지~ 어떤 운세가 궁금하냐?</p>
+    </div>
+
+    <div class="jumbang-scroll">
+      <!-- 운세 메뉴 -->
+      <div class="jumbang-section-title">✿ 운세 고르기</div>
+      <div class="jumbang-grid">
+        <button class="btn-jumbang-q" data-q="today">🌅<span>오늘 운세</span></button>
+        <button class="btn-jumbang-q" data-q="love">❤️<span>연애·연인</span></button>
+        <button class="btn-jumbang-q" data-q="money">💰<span>재물운</span></button>
+        <button class="btn-jumbang-q" data-q="work">💼<span>직업·직장</span></button>
+        <button class="btn-jumbang-q" data-q="relation">🤝<span>인간관계</span></button>
+        <button class="btn-jumbang-q" data-q="worry">🤔<span>고민 해결</span></button>
+        <button class="btn-jumbang-q" data-q="health">🍀<span>건강운</span></button>
+        <button class="btn-jumbang-q" data-q="moving">🏠<span>이사운</span></button>
+        <button class="btn-jumbang-q" data-q="children">👶<span>자녀운</span></button>
+      </div>
+      <p class="jumbang-q-note">각 운세는 광고 1회 시청 후 볼 수 있어요</p>
+
+      <!-- 점방 굿즈 -->
+      <div class="jumbang-divider">❖ ✿ ❖</div>
+      <div class="jumbang-section-title">✿ 할머니 점방</div>
+      <p class="jumbang-store-desc">할미가 직접 만든 화투로<br>점을 보고 복을 불러봐~</p>
+
+      <a class="btn-store" id="btnStoreGoods" href="#" target="_blank">
+        🎴 화투 실물 굿즈 구경하기
+        <span class="store-badge">준비 중</span>
+      </a>
+      <a class="btn-store btn-store-book" id="btnStoreBook" href="#" target="_blank">
+        📖 화투점 보는 법 (전자책)
+        <span class="store-badge">준비 중</span>
+      </a>
     </div>
   </div>
 

@@ -407,9 +407,16 @@ function updateMoreQButtons() {
 
 // ── 결과 화면 ──
 const QUESTION_TITLES = {
-  today: '오늘의 화투 운세', love: '오늘의 연애 운세',
-  money: '오늘의 재물 운세', work: '오늘의 직업 운세',
-  relation: '오늘의 관계 운세', worry: '오늘의 조언', '': '오늘의 화투 운세',
+  today:    '오늘의 화투 운세',
+  love:     '오늘의 연애 운세',
+  money:    '오늘의 재물 운세',
+  work:     '오늘의 직업 운세',
+  relation: '오늘의 관계 운세',
+  worry:    '오늘의 조언',
+  health:   '오늘의 건강 운세',
+  moving:   '이사·이동 운세',
+  children: '자녀 운세',
+  '':       '오늘의 화투 운세',
 };
 
 function renderResult(pairs, fortuneText, qType) {
@@ -569,6 +576,36 @@ function init() {
     document.getElementById('deckStack').onclick = () => doShuffle();
     document.getElementById('deckHint').textContent = '자, 섞어봐';
     document.getElementById('deckStack').style.animation = '';
+  });
+
+  // 점방 화면 이동
+  document.getElementById('btnGoJumbang').addEventListener('click', () => {
+    updateJumbangButtons();
+    showScreen('screen-jumbang');
+  });
+  document.getElementById('btnBackJumbang').addEventListener('click', () => {
+    showScreen('screen-result');
+  });
+
+  // 점방 운세 버튼
+  document.querySelectorAll('.btn-jumbang-q').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const q = btn.dataset.q;
+      getMoreFortune(q);
+    });
+  });
+}
+
+function updateJumbangButtons() {
+  document.querySelectorAll('.btn-jumbang-q').forEach(btn => {
+    const q = btn.dataset.q;
+    if (viewedQuestions.has(q)) {
+      btn.classList.add('viewed');
+      btn.disabled = true;
+    } else {
+      btn.classList.remove('viewed');
+      btn.disabled = false;
+    }
   });
 }
 

@@ -844,6 +844,139 @@ html, body {
 .ad-used-msg { font-size: 12px; color: var(--text-dim); text-align: center; }
 
 /* ══════════════════════════════════════
+   점방 가기 버튼 (결과 화면)
+══════════════════════════════════════ */
+.btn-jumbang {
+  display: block;
+  width: 100%;
+  margin: 12px 0 6px;
+  padding: 14px;
+  background: linear-gradient(135deg, #8B1C13, #c8380a);
+  border: none;
+  border-radius: 12px;
+  color: #fff8e8;
+  font-size: 1rem;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  box-shadow: 0 4px 16px rgba(139,28,19,0.5);
+}
+
+/* ══════════════════════════════════════
+   할머니 점방 화면
+══════════════════════════════════════ */
+#screen-jumbang {
+  background: linear-gradient(180deg, #1a0c06 0%, #2a0e08 100%);
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.jumbang-header {
+  text-align: center;
+  padding: 48px 20px 20px;
+  flex-shrink: 0;
+}
+.jumbang-title { font-size: 1.5rem; font-weight: 900; }
+.jumbang-sub { color: var(--text-dim); font-size: 0.85rem; margin-top: 4px; }
+
+.jumbang-scroll {
+  flex: 1;
+  overflow-y: auto;
+  padding: 0 20px 40px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.jumbang-section-title {
+  font-size: 0.8rem;
+  color: var(--gold, #c8a84b);
+  letter-spacing: 2px;
+  margin: 16px 0 12px;
+  text-align: center;
+}
+
+.jumbang-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  width: 100%;
+  max-width: 360px;
+}
+
+.btn-jumbang-q {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 14px 8px;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(200,168,75,0.25);
+  border-radius: 12px;
+  color: var(--text-main, #f5e8d0);
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+}
+.btn-jumbang-q span { font-size: 0.75rem; }
+.btn-jumbang-q:hover { background: rgba(200,168,75,0.12); border-color: var(--gold, #c8a84b); }
+.btn-jumbang-q.viewed {
+  opacity: 0.4;
+  cursor: default;
+}
+.btn-jumbang-q:first-child { font-size: 1.4rem; }
+
+.jumbang-q-note {
+  font-size: 0.72rem;
+  color: var(--text-dim);
+  text-align: center;
+  margin-top: 10px;
+}
+
+.jumbang-divider {
+  color: var(--gold, #c8a84b);
+  letter-spacing: 6px;
+  margin: 28px 0 4px;
+  font-size: 0.85rem;
+}
+
+.jumbang-store-desc {
+  text-align: center;
+  color: var(--text-dim);
+  font-size: 0.85rem;
+  line-height: 1.7;
+  margin-bottom: 16px;
+}
+
+.btn-store {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  max-width: 320px;
+  padding: 14px 18px;
+  margin-bottom: 10px;
+  background: rgba(255,255,255,0.05);
+  border: 1.5px solid rgba(200,168,75,0.3);
+  border-radius: 12px;
+  color: var(--text-main, #f5e8d0);
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+}
+.btn-store-book { border-color: rgba(100,160,220,0.3); }
+
+.store-badge {
+  font-size: 0.65rem;
+  background: rgba(200,168,75,0.2);
+  color: var(--gold, #c8a84b);
+  padding: 2px 8px;
+  border-radius: 20px;
+  font-weight: 400;
+}
+
+/* ══════════════════════════════════════
    할머니 메시지 섹션
 ══════════════════════════════════════ */
 .letter-section {
