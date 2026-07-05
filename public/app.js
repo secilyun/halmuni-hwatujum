@@ -83,6 +83,70 @@ function playShuffleSound() {
   } catch(e) {}
 }
 
+// ── 구독 설정 ──
+// ⚠️ 앱인토스 대시보드에서 발급받은 구독 상품 SKU로 교체하세요
+const SUBSCRIPTION_SKU = 'ssanghwa_monthly_4400';
+const SUB_KEY = 'hwatu_subscription';
+
+function getSubState() {
+  try { return JSON.parse(localStorage.getItem(SUB_KEY) || '{}'); } catch { return {}; }
+}
+function saveSubState(s) { localStorage.setItem(SUB_KEY, JSON.stringify(s)); }
+
+function isSubscribed() {
+  const s = getSubState();
+  if (!s.active) return false;
+  // 만료 날짜 체크 (서버 검증 없이 로컬 fallback)
+  if (s.expiresAt && new Date(s.expiresAt) < new Date()) return false;
+  return true;
+}
+
+async function checkSubscriptionStatus() {
+  if (typeof window.IAP?.getSubscriptionStatus === 'function') {
+    return new Promise(resolve => {
+      window.IAP.getSubscriptionStatus({
+        productId: SUBSCRIPTION_SKU,
+        onSuccess: (result) => {
+          const active = result?.isActive === true;
+          const expiresAt = result?.expiresAt || null;
+          saveSubState({ active, expiresAt, updatedAt: new Date().toISOString() });
+          resolve(active);
+        },
+        onFail: () => resolve(isSubscribed()) // 네트워크 오류 시 로컬 캐시 사용
+      });
+    });
+  }
+  return isSubscribed();
+}
+
+function purchaseSubscription() {
+  if (typeof window.IAP?.createSubscriptionPurchaseOrder === 'function') {
+    window.IAP.createSubscriptionPurchaseOrder({
+      productId: SUBSCRIPTION_SKU,
+      onSuccess: (result) => {
+        const expiresAt = result?.expiresAt || new Date(Date.now() + 31 * 24 * 3600 * 1000).toISOString();
+        saveSubState({ active: true, expiresAt, updatedAt: new Date().toISOString() });
+        hideSubModal();
+        showToast('쌍화차 감사히 받겠네~ 이제 무제한이야! 🍵');
+        renderHome();
+      },
+      onFail: (err) => {
+        if (err?.code !== 'USER_CANCEL') showToast('결제에 실패했어요. 다시 시도해주세요.');
+      }
+    });
+  } else {
+    // 앱인토스 환경 밖 (개발/테스트)
+    showToast('결제는 앱인토스 앱에서만 가능합니다');
+  }
+}
+
+function showSubModal() {
+  document.getElementById('subModal').classList.add('open');
+}
+function hideSubModal() {
+  document.getElementById('subModal').classList.remove('open');
+}
+
 // ── 사용량 ──
 const USAGE_KEY = 'hwatu_usage';
 const FREE_DAILY = 1;
@@ -100,10 +164,12 @@ function getUsage() {
 function saveUsage(u) { localStorage.setItem(USAGE_KEY, JSON.stringify(u)); }
 function getRemainingAd() { return Math.max(0, AD_DAILY - getUsage().adUsed); }
 function canUseFortune() {
+  if (isSubscribed()) return true; // 구독 중이면 무제한
   const u = getUsage();
   return u.used < FREE_DAILY + Math.min(u.adUsed, AD_DAILY);
 }
 function incrementUsage() {
+  if (isSubscribed()) return; // 구독 중이면 차감 없음
   const u = getUsage(); u.used = (u.used || 0) + 1; saveUsage(u);
 }
 function incrementAdUsage() {
@@ -145,25 +211,35 @@ function showToast(msg) {
 
 // ── 홈 화면 렌더 ──
 function renderHome() {
+  const subscribed = isSubscribed();
   const u = getUsage();
   const usageEl = document.getElementById('usageText');
   const btnAd = document.getElementById('btnAd');
   const adUsedMsg = document.getElementById('adUsedMsg');
-  const adBonus = Math.min(u.adUsed, AD_DAILY);
-  const remaining = Math.max(0, FREE_DAILY + adBonus - u.used);
+  const subBadge = document.getElementById('subBadge');
 
-  if (remaining > 0) {
-    usageEl.textContent = remaining + '회';
+  if (subscribed) {
+    usageEl.textContent = '무제한';
     btnAd.style.display = 'none';
     adUsedMsg.style.display = 'none';
-  } else if (getRemainingAd() > 0) {
-    usageEl.textContent = '0회';
-    btnAd.style.display = 'block';
-    adUsedMsg.style.display = 'none';
+    if (subBadge) subBadge.style.display = 'flex';
   } else {
-    usageEl.textContent = '0회';
-    btnAd.style.display = 'none';
-    adUsedMsg.style.display = 'block';
+    if (subBadge) subBadge.style.display = 'none';
+    const adBonus = Math.min(u.adUsed, AD_DAILY);
+    const remaining = Math.max(0, FREE_DAILY + adBonus - u.used);
+    if (remaining > 0) {
+      usageEl.textContent = remaining + '회';
+      btnAd.style.display = 'none';
+      adUsedMsg.style.display = 'none';
+    } else if (getRemainingAd() > 0) {
+      usageEl.textContent = '0회';
+      btnAd.style.display = 'block';
+      adUsedMsg.style.display = 'none';
+    } else {
+      usageEl.textContent = '0회';
+      btnAd.style.display = 'none';
+      adUsedMsg.style.display = 'block';
+    }
   }
   loadHomeMessages();
 }
@@ -522,6 +598,19 @@ function init() {
 
   // 홈: 광고
   document.getElementById('btnAd').addEventListener('click', handleAdButton);
+
+  // 구독 버튼 (홈, 점방, 모달 공통)
+  document.querySelectorAll('.btn-subscribe').forEach(btn => {
+    btn.addEventListener('click', () => {
+      if (isSubscribed()) { showToast('이미 쌍화차 구독 중이에요 🍵'); return; }
+      showSubModal();
+    });
+  });
+  document.getElementById('btnSubConfirm')?.addEventListener('click', purchaseSubscription);
+  document.getElementById('btnSubCancel')?.addEventListener('click', hideSubModal);
+
+  // 앱 시작 시 구독 상태 확인
+  checkSubscriptionStatus().then(renderHome);
 
   // 담요: 뒤로/운세보기
   document.getElementById('btnBackHome').addEventListener('click', () => {
