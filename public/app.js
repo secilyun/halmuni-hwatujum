@@ -1,6 +1,8 @@
 'use strict';
 
-const API_BASE = location.hostname === 'localhost' ? '' : 'https://halmuni-hwatujum-production.up.railway.app';
+const API_BASE = (typeof window !== 'undefined' && window.ReactNativeWebView)
+  ? 'https://halmuni-hwatujum-production.up.railway.app'
+  : (location.hostname === 'localhost' ? '' : 'https://halmuni-hwatujum-production.up.railway.app');
 
 // ── 소리 합성 ──
 let audioCtx = null;
@@ -85,7 +87,7 @@ function playShuffleSound() {
 
 // ── 구독 설정 ──
 // ⚠️ 앱인토스 대시보드에서 발급받은 구독 상품 SKU로 교체하세요
-const SUBSCRIPTION_SKU = 'ssanghwa_monthly_4400';
+const SUBSCRIPTION_SKU = 'sub.1230.mr7zpx22.6a8f06fe2e';
 const SUB_KEY = 'hwatu_subscription';
 
 function getSubState() {
