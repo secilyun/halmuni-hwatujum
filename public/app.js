@@ -1,5 +1,7 @@
 'use strict';
 
+const AD_GROUP_ID = 'ait.v2.live.5f777827530542e0';
+
 const API_BASE = (typeof window !== 'undefined' && window.ReactNativeWebView)
   ? 'https://halmuni-hwatujum-production.up.railway.app'
   : (location.hostname === 'localhost' ? '' : 'https://halmuni-hwatujum-production.up.railway.app');
@@ -463,6 +465,7 @@ function getMoreFortune(questionType) {
   // 광고 시청 후 운세
   if (typeof window.showFullScreenAd?.isSupported === 'function' && window.showFullScreenAd.isSupported()) {
     window.showFullScreenAd({
+      options: { adGroupId: AD_GROUP_ID },
       onEvent: (e) => {
         if (e.type === 'userEarnedReward') doFortune();
       },
@@ -561,6 +564,7 @@ function showAdFallbackThen(callback) {
 function handleAdButton() {
   if (typeof window.showFullScreenAd?.isSupported === 'function' && window.showFullScreenAd.isSupported()) {
     window.showFullScreenAd({
+      options: { adGroupId: AD_GROUP_ID },
       onEvent: (e) => {
         if (e.type === 'userEarnedReward') {
           incrementAdUsage();
